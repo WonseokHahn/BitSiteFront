@@ -64,19 +64,6 @@
           </p>
         </div>
       </div>
-      
-      <!-- 데모 안내 -->
-      <!-- <div class="demo-info">
-        <div class="demo-card">
-          <h3 class="demo-title">🚀 무료 체험</h3>
-          <p class="demo-description">
-            로그인 없이도 뉴스 검색과 AI 요약 기능을 자유롭게 사용해보세요!
-          </p>
-          <router-link to="/" class="btn btn-outline">
-            홈으로 돌아가기
-          </router-link>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>

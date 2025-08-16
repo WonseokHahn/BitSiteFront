@@ -9,18 +9,6 @@
           </router-link>
         </div>
 
-        <!-- 네비게이션 -->
-        <nav class="header-nav">
-          <router-link to="/" class="nav-link">홈</router-link>
-          <router-link 
-            v-if="isAuthenticated" 
-            to="/trading" 
-            class="nav-link"
-          >
-            자동매매
-          </router-link>
-        </nav>
-
         <!-- 사용자 메뉴 -->
         <div class="header-user">
           <div v-if="isAuthenticated" class="user-menu">
@@ -50,9 +38,6 @@
               </button>
               
               <div v-if="showUserMenu" class="dropdown-menu">
-                <router-link to="/trading" class="dropdown-item">
-                  자동매매 관리
-                </router-link>
                 <div class="dropdown-divider"></div>
                 <button @click="handleLogout" class="dropdown-item">
                   로그아웃
@@ -263,24 +248,6 @@ export default {
   gap: var(--spacing-sm);
 }
 
-/* 모바일 반응형 */
-/* @media (max-width: 768px) {
-  .header-content {
-    height: 60px;
-  }
-  
-  .header-nav {
-    display: none;
-  }
-  
-  .logo-text {
-    font-size: var(--font-lg);
-  }
-  
-  .user-name {
-    display: none;
-  }
-} */
  /* 모바일 반응형 */
 @media (max-width: 768px) {
   .header-content {
