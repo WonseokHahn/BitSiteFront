@@ -9,6 +9,18 @@
           </router-link>
         </div>
 
+        <!-- 네비게이션 -->
+        <nav class="header-nav">
+          <router-link to="/" class="nav-link">홈</router-link>
+          <router-link 
+            v-if="isAuthenticated" 
+            to="/trading" 
+            class="nav-link"
+          >
+            자동매매
+          </router-link>
+        </nav>
+
         <!-- 사용자 메뉴 -->
         <div class="header-user">
           <div v-if="isAuthenticated" class="user-menu">
@@ -38,6 +50,9 @@
               </button>
               
               <div v-if="showUserMenu" class="dropdown-menu">
+                <router-link to="/trading" class="dropdown-item">
+                  자동매매 관리
+                </router-link>
                 <div class="dropdown-divider"></div>
                 <button @click="handleLogout" class="dropdown-item">
                   로그아웃
