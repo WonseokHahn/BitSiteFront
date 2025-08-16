@@ -1,13 +1,11 @@
 import { createStore } from 'vuex'
 import authModule from './modules/auth'
 import newsModule from './modules/news'
-import tradingModule from './modules/trading'
 
 export default createStore({
   modules: {
     auth: authModule,
-    news: newsModule,
-    trading: tradingModule
+    news: newsModule
   },
   
   state: {
