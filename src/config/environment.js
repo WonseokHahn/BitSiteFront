@@ -5,7 +5,7 @@ const config = {
     ENVIRONMENT: 'development'
   },
   production: {
-    API_BASE_URL: process.env.VUE_APP_API_URL || 'https://tradesiteback.onrender.com/api',
+    API_BASE_URL: process.env.VUE_APP_API_URL || 'https://bitsiteback.onrender.com/api',
     ENVIRONMENT: 'production'
   }
 }

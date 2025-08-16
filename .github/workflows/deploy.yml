@@ -27,7 +27,7 @@ jobs:
       run: |
         npm run build
       env:
-        VUE_APP_API_URL: https://tradesiteback.onrender.com/api
+        VUE_APP_API_URL: https://bitsiteback.onrender.com/api
         VUE_APP_ENVIRONMENT: production
         
     - name: Deploy to GitHub Pages
