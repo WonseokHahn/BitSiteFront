@@ -15,7 +15,7 @@ const currentConfig = config[process.env.NODE_ENV] || config.development
 export default {
   ...currentConfig,
   // 공통 설정
-  APP_NAME: '주식 자동매매 사이트',
+  APP_NAME: 'AI 사이트',
   VERSION: '1.0.0',
   
   // OAuth 리디렉션 URL

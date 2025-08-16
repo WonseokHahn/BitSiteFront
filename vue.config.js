@@ -33,7 +33,7 @@ module.exports = defineConfig({
   
   // PWA 설정 (선택사항)
   pwa: {
-    name: '주식 자동매매 사이트',
+    name: 'AI 사이트',
     themeColor: '#1976d2',
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',

@@ -13,7 +13,7 @@ const routes = [
     name: 'Home',
     component: Home,
     meta: { 
-      title: '홈 - 주식 자동매매 사이트',
+      title: '홈 - AI 사이트',
       requiresAuth: false 
     }
   },
@@ -22,7 +22,7 @@ const routes = [
     name: 'Login',
     component: Login,
     meta: { 
-      title: '로그인 - 주식 자동매매 사이트',
+      title: '로그인 - AI 사이트',
       requiresAuth: false 
     }
   },
@@ -60,7 +60,7 @@ router.beforeEach((to, from, next) => {
   console.log('🔄 라우터 이동:', from.path, '→', to.path)
   
   // 페이지 타이틀 설정
-  document.title = to.meta.title || '주식 자동매매 사이트'
+  document.title = to.meta.title || 'AI 사이트'
   
   // 인증이 필요한 페이지 체크
   if (to.meta.requiresAuth) {
