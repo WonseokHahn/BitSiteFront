@@ -3,7 +3,7 @@ import { useToast } from 'vue-toastification'
 
 // 매매 전략 구현
 const strategies = {
-  // 1. 모멘텀 전략 (RSI + MACD)
+  // 1. 모멘텀 전략 (RSI + MACD + 이동평균)
   momentum: {
     name: '모멘텀 전략',
     description: 'RSI와 MACD를 활용한 추세 추종 전략',
@@ -73,11 +73,11 @@ const strategies = {
     
     // 매수 조건: 볼린저 밴드 폭 확장 && 상향 돌파 && 거래량 증가
     shouldBuy(candle, indicators) {
-      const { bollingerUpper, bollingerLower, bollingerWidth, volumeMA, rsi } = indicators
+      const { bollingerUpper, bollingerWidth, bollingerWidthMA, volumeMA, rsi } = indicators
       const prevCandle = indicators.prevCandle
       
       return (
-        bollingerWidth > indicators.bollingerWidthMA * 1.2 && // 변동성 확장
+        bollingerWidth > bollingerWidthMA * 1.2 && // 변동성 확장
         candle.close > bollingerUpper && // 상향 돌파
         candle.volume > volumeMA * 1.5 && // 거래량 증가
         rsi > 50 && // 모멘텀 확인
@@ -87,12 +87,12 @@ const strategies = {
     
     // 매도 조건: 변동성 축소 || 하향 돌파 || 높은 수익률
     shouldSell(candle, indicators, position) {
-      const { bollingerLower, bollingerWidth, rsi } = indicators
+      const { bollingerLower, bollingerWidth, bollingerWidthMA, rsi } = indicators
       const profitRate = ((candle.close - position.avgPrice) / position.avgPrice) * 100
       
       return (
         candle.close < bollingerLower || // 하향 돌파
-        bollingerWidth < indicators.bollingerWidthMA * 0.8 || // 변동성 축소
+        bollingerWidth < bollingerWidthMA * 0.8 || // 변동성 축소
         rsi < 30 || // 과매도
         profitRate > 15 || // 15% 익절
         profitRate < -7    // 7% 손절
@@ -257,14 +257,13 @@ const actions = {
   },
   
   // 실시간 데이터 수신 시작
-  startRealtimeData({ state }) {
+  startRealtimeData({ commit, state }) {
     // WebSocket 또는 SSE로 실시간 데이터 수신
     // 여기서는 시뮬레이션으로 구현
     state.realtimeInterval = setInterval(() => {
       state.selectedCoins.forEach(symbol => {
         const mockData = generateMockMarketData(symbol)
-        // 실제로는 commit을 사용하여 상태 업데이트
-        state.marketData[symbol] = mockData
+        commit('UPDATE_MARKET_DATA', { symbol, data: mockData })
       })
     }, 1000)
   },
@@ -306,7 +305,7 @@ const actions = {
       if (!marketData) return
       
       // 기술적 지표 계산
-      const indicators = await dispatch('calculateIndicators', { symbol, marketData })
+      const indicators = await dispatch('calculateIndicators', { symbol })
       
       // 현재 포지션 확인
       const currentPosition = state.positions.find(p => p.symbol === symbol)
@@ -417,7 +416,7 @@ const actions = {
   },
   
   // 기술적 지표 계산
-  async calculateIndicators({ state }, { symbol, marketData }) {
+  async calculateIndicators(_, { symbol }) {
     try {
       // 캔들 데이터 가져오기 (최근 200개)
       const response = await apiClient.get(`/trading/candles/${symbol}`, {
@@ -523,7 +522,15 @@ function calculateMACD(candles, fast = 12, slow = 26, signal = 9) {
 }
 
 function calculateBollingerBands(candles, period = 20, multiplier = 2) {
-  if (candles.length < period) return { bollingerUpper: 0, bollingerMiddle: 0, bollingerLower: 0 }
+  if (candles.length < period) {
+    return { 
+      bollingerUpper: 0, 
+      bollingerMiddle: 0, 
+      bollingerLower: 0,
+      bollingerWidth: 0,
+      bollingerWidthMA: 0
+    }
+  }
   
   const closes = candles.slice(-period).map(c => c.close)
   const sma = closes.reduce((sum, price) => sum + price, 0) / period
