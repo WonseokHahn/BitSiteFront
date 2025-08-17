@@ -196,11 +196,11 @@ const mutations = {
 
 const actions = {
   // 자동매매 시작
-  async startTrading({ commit, state, dispatch }) {
+  async startTrading({ _commit , state, dispatch }) {
     if (state.isTrading) return
     
     try {
-      commit('SET_LOADING', { type: 'starting', status: true })
+      _commit ('SET_LOADING', { type: 'starting', status: true })
       
       // 서버에 매매 시작 요청
       const response = await apiClient.post('/trading/start', {
@@ -210,7 +210,7 @@ const actions = {
       })
       
       if (response.data.success) {
-        commit('SET_TRADING_STATUS', true)
+        _commit ('SET_TRADING_STATUS', true)
         
         // 실시간 데이터 수신 시작
         dispatch('startRealtimeData')
@@ -226,21 +226,21 @@ const actions = {
       const toast = useToast()
       toast.error('매매 시작에 실패했습니다.')
     } finally {
-      commit('SET_LOADING', { type: 'starting', status: false })
+      _commit ('SET_LOADING', { type: 'starting', status: false })
     }
   },
   
   // 자동매매 중지
-  async stopTrading({ commit, state, dispatch }) {
+  async stopTrading({ _commit , state, dispatch }) {
     if (!state.isTrading) return
     
     try {
-      commit('SET_LOADING', { type: 'stopping', status: true })
+      _commit ('SET_LOADING', { type: 'stopping', status: true })
       
       // 서버에 매매 중지 요청
       await apiClient.post('/trading/stop')
       
-      commit('SET_TRADING_STATUS', false)
+      _commit ('SET_TRADING_STATUS', false)
       
       // 실시간 데이터 중지
       dispatch('stopRealtimeData')
@@ -252,18 +252,18 @@ const actions = {
       const toast = useToast()
       toast.error('매매 중지에 실패했습니다.')
     } finally {
-      commit('SET_LOADING', { type: 'stopping', status: false })
+      _commit ('SET_LOADING', { type: 'stopping', status: false })
     }
   },
   
   // 실시간 데이터 수신 시작
-  startRealtimeData({ commit, state }) {
+  startRealtimeData({ _commit , state }) {
     // WebSocket 또는 SSE로 실시간 데이터 수신
     // 여기서는 시뮬레이션으로 구현
     state.realtimeInterval = setInterval(() => {
       state.selectedCoins.forEach(symbol => {
         const mockData = generateMockMarketData(symbol)
-        commit('UPDATE_MARKET_DATA', { symbol, data: mockData })
+        _commit ('UPDATE_MARKET_DATA', { symbol, data: mockData })
       })
     }, 1000)
   },
@@ -298,7 +298,7 @@ const actions = {
   },
   
   // 개별 코인 매매 실행
-  async executeTrading({ state, commit, dispatch }, symbol) {
+  async executeTrading({ state, _commit , dispatch }, symbol) {
     try {
       // 현재 시장 데이터 가져오기
       const marketData = state.marketData[symbol]
@@ -331,7 +331,7 @@ const actions = {
   },
   
   // 매수 실행
-  async executeBuy({ state, commit }, { symbol, price }) {
+  async executeBuy({ state, _commit  }, { symbol, price }) {
     try {
       // 투자 금액 계산
       const investAmount = state.settings.investmentAmount / state.selectedCoins.length
@@ -354,7 +354,7 @@ const actions = {
           entryTime: new Date(),
           unrealizedPnL: 0
         }
-        commit('ADD_POSITION', position)
+        _commit ('ADD_POSITION', position)
         
         // 거래 기록 추가
         const trade = {
@@ -366,7 +366,7 @@ const actions = {
           timestamp: new Date(),
           strategy: state.activeStrategy
         }
-        commit('ADD_TRADE_RECORD', trade)
+        _commit ('ADD_TRADE_RECORD', trade)
         
         console.log(`매수 완료: ${symbol} @ ${price}`)
       }
@@ -376,7 +376,7 @@ const actions = {
   },
   
   // 매도 실행
-  async executeSell({ state, commit }, { symbol, price }) {
+  async executeSell({ state, _commit  }, { symbol, price }) {
     try {
       const position = state.positions.find(p => p.symbol === symbol)
       if (!position) return
@@ -393,7 +393,7 @@ const actions = {
         const profit = ((price - position.avgPrice) / position.avgPrice) * 100
         
         // 포지션 제거
-        commit('REMOVE_POSITION', symbol)
+        _commit ('REMOVE_POSITION', symbol)
         
         // 거래 기록 추가
         const trade = {
@@ -406,7 +406,7 @@ const actions = {
           timestamp: new Date(),
           strategy: state.activeStrategy
         }
-        commit('ADD_TRADE_RECORD', trade)
+        _commit ('ADD_TRADE_RECORD', trade)
         
         console.log(`매도 완료: ${symbol} @ ${price} (${profit.toFixed(2)}%)`)
       }
@@ -455,9 +455,9 @@ const actions = {
   },
   
   // AI 종목 추천 갱신
-  async refreshAIRecommendations({ commit }) {
+  async refreshAIRecommendations({ _commit  }) {
     try {
-      commit('SET_LOADING', { type: 'analyzing', status: true })
+      _commit ('SET_LOADING', { type: 'analyzing', status: true })
       
       const response = await apiClient.get('/trading/ai-recommendations')
       
@@ -468,7 +468,7 @@ const actions = {
       console.error('AI 추천 갱신 실패:', error)
       return []
     } finally {
-      commit('SET_LOADING', { type: 'analyzing', status: false })
+      _commit ('SET_LOADING', { type: 'analyzing', status: false })
     }
   }
 }
