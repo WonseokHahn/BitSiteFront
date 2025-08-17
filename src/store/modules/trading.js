@@ -532,6 +532,7 @@ function calculateBollingerBands(candles, period = 20, multiplier = 2) {
   const stdDev = Math.sqrt(variance)
   
   const bollingerUpper = sma + (stdDev * multiplier)
+  const bollingerMiddle = sma
   const bollingerLower = sma - (stdDev * multiplier)
   const bollingerWidth = bollingerUpper - bollingerLower
   
@@ -541,7 +542,7 @@ function calculateBollingerBands(candles, period = 20, multiplier = 2) {
   
   return {
     bollingerUpper,
-    bollingerMiddle: sma,
+    bollingerMiddle,
     bollingerLower,
     bollingerWidth,
     bollingerWidthMA
