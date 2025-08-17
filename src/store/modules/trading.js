@@ -455,9 +455,9 @@ const actions = {
   },
   
   // AI 종목 추천 갱신
-  async refreshAIRecommendations({ _commit  }) {
+  async refreshAIRecommendations() {
     try {
-      _commit ('SET_LOADING', { type: 'analyzing', status: true })
+      // commit('SET_LOADING', { type: 'analyzing', status: true })
       
       const response = await apiClient.get('/trading/ai-recommendations')
       
@@ -468,7 +468,7 @@ const actions = {
       console.error('AI 추천 갱신 실패:', error)
       return []
     } finally {
-      _commit ('SET_LOADING', { type: 'analyzing', status: false })
+      // commit('SET_LOADING', { type: 'analyzing', status: false })
     }
   }
 }
