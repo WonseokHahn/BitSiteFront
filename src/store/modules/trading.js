@@ -257,13 +257,14 @@ const actions = {
   },
   
   // 실시간 데이터 수신 시작
-  startRealtimeData({ commit, state }) {
+  startRealtimeData({ state }) {
     // WebSocket 또는 SSE로 실시간 데이터 수신
     // 여기서는 시뮬레이션으로 구현
     state.realtimeInterval = setInterval(() => {
       state.selectedCoins.forEach(symbol => {
         const mockData = generateMockMarketData(symbol)
-        commit('UPDATE_MARKET_DATA', { symbol, data: mockData })
+        // 실제로는 commit을 사용하여 상태 업데이트
+        state.marketData[symbol] = mockData
       })
     }, 1000)
   },
